@@ -1,0 +1,1002 @@
+/* ============================================
+   TABLE DES MATIÈRES
+   ============================================
+   1. Variables CSS (Mode Clair et Sombre)
+   2. Reset et Styles de Base
+   3. Page de Connexion
+   4. Layout Principal (Sidebar, Topbar, Content)
+   5. Composants Communs (Cartes, Tableaux, Boutons, Modals)
+   6. Styles des Pages Spécifiques (KPI Cards, Charts)
+   7. Raccourcis et Recherche Rapide
+   8. Styles Utilitaires et Animations Simples
+   ============================================ */
+
+/* ============================================
+   1. VARIABLES CSS
+   ============================================ */
+
+/* Mode Clair: Définit les couleurs et dimensions par défaut */
+:root {
+    --primary-color: #4f46e5;      /* Couleur principale (ex: boutons, liens actifs) */
+    --secondary-color: #64748b;    /* Couleur secondaire */
+    --success-color: #10b981;      /* Couleur pour les succès */
+    --danger-color: #ef4444;       /* Couleur pour les erreurs/alertes */
+    --warning-color: #f59e0b;      /* Couleur pour les avertissements */
+    --info-color: #3b82f6;         /* Couleur pour les informations */
+    --dark-color: #1e293b;         /* Couleur foncée générale */
+    --light-color: #f8fafc;        /* Couleur claire générale */
+    
+    --sidebar-width: 260px;        /* Largeur de la barre latérale */
+    --topbar-height: 70px;         /* Hauteur de la barre supérieure */
+    
+    /* Couleurs de fond */
+    --bg-primary: #f1f5f9;         /* Fond principal des pages */
+    --bg-secondary: #ffffff;       /* Fond des cartes et éléments principaux */
+    --bg-tertiary: #f8fafc;        /* Fond des en-têtes de tableau, champs de formulaire */
+    
+    /* Couleurs de texte */
+    --text-primary: #334155;       /* Texte principal */
+    --text-secondary: #64748b;     /* Texte secondaire/moins important */
+    --text-muted: #94a3b8;         /* Texte discret */
+    
+    /* Bordures */
+    --border-color: #e2e8f0;       /* Couleur des bordures générales */
+    --border-light: #f1f5f9;       /* Couleur des bordures plus légères (ex: entre lignes de tableau) */
+    
+    /* Ombres */
+    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);   /* Petite ombre */
+    --shadow-md: 0 5px 20px rgba(0, 0, 0, 0.1);    /* Ombre moyenne */
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.15);   /* Grande ombre */
+}
+
+/* Mode Sombre: Redéfinit les variables pour le thème sombre */
+[data-theme="dark"] {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    
+    --border-color: #334155;
+    --border-light: #1e293b;
+    
+    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 5px 20px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   2. RESET ET STYLES DE BASE
+   ============================================ */
+
+/* Réinitialise les marges, paddings et utilise le box-sizing pour tous les éléments */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Styles de base pour le corps du document */
+body {
+    font-family: 'Poppins', sans-serif; /* Police de caractères principale */
+    background-color: var(--bg-primary); /* Couleur de fond principale, change avec le thème */
+    color: var(--text-primary);         /* Couleur de texte principale, change avec le thème */
+    line-height: 1.6;                   /* Hauteur de ligne pour une meilleure lisibilité */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transition douce pour le changement de thème */
+}
+
+/* ============================================
+   3. PAGE DE CONNEXION (Style Professionnel Raffiné)
+   ============================================ */
+
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 74%); /* Dégradé de fond sombre */
+    background-size: 400% 400%; /* Permet l'animation du dégradé */
+    position: relative;
+    overflow: hidden;
+    animation: bgShift 20s ease infinite; /* Anime le dégradé */
+}
+
+/* Animation de décalage du fond */
+@keyframes bgShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px; /* Largeur maximale pour le formulaire de connexion */
+    padding: 20px;
+    position: relative;
+    z-index: 2; /* S'assure que le formulaire est au-dessus du fond animé */
+}
+
+.login-card {
+    background: rgba(30, 41, 59, 0.5); /* Fond semi-transparent */
+    backdrop-filter: blur(15px);       /* Effet de flou derrière la carte (pour le style 'verre') */
+    -webkit-backdrop-filter: blur(15px); /* Compatibilité WebKit */
+    border-radius: 16px;
+    padding: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Bordure subtile */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Ombre prononcée */
+    color: #f1f5f9;
+}
+
+/* Animation d'entrée pour la carte de connexion */
+.login-card.animated {
+    animation: cardEntrance 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes cardEntrance {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Hiérarchie de texte dans la carte de connexion */
+.login-card p {
+    font-size: 14px;
+    color: rgba(226,232,240,0.65);
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+/* Style de l'en-tête (titre) */
+.login-card h2 {
+    font-weight: 600;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%); /* Texte avec dégradé */
+    -webkit-background-clip: text; /* Rend le dégradé visible uniquement sur le texte */
+    -webkit-text-fill-color: transparent; /* Rend le texte transparent pour afficher le dégradé */
+    background-clip: text;
+    display: flex; /* Permet d'aligner l'image et le texte */
+    align-items: center; /* Centre verticalement */
+    justify-content: center; /* Centre horizontalement */
+}
+
+.login-logo {
+    height: 40px; /* Taille du logo pour la page de connexion */
+    margin-right: 10px; /* Espacement entre le logo et le texte */
+}
+
+/* Style des éléments de formulaire */
+.login-card .form-label {
+    font-weight: 500;
+    color: rgba(226, 232, 240, 0.8);
+}
+
+.login-card .form-control, 
+.login-card .form-select {
+    background-color: rgba(15, 23, 42, 0.5); /* Fond sombre semi-transparent */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #f1f5f9;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-card .form-control:focus, 
+.login-card .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25); /* Ombre au focus */
+    background-color: rgba(15, 23, 42, 0.8);
+}
+
+/* Feedback de validation des champs (Bootstrap) */
+.form-control.is-valid {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34,197,94,0.25);
+}
+
+.form-control.is-invalid {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 2px rgba(239,68,68,0.25);
+}
+
+/* Style du bouton principal */
+.login-card .btn-primary {
+    padding: 12px;
+    font-weight: 500;
+    font-size: 1rem;
+    background-color: var(--primary-color);
+    border: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.login-card .btn-primary:hover {
+    background-color: #4338ca;
+    transform: translateY(-2px); /* Léger mouvement vers le haut au survol */
+}
+
+/* Style pour le bouton en état de chargement */
+.btn-loading {
+    pointer-events: none; /* Désactive les clics */
+    opacity: 0.85;
+}
+
+.btn-loading .spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: .2em;
+    margin-right: 0.5rem;
+}
+
+
+/* ============================================
+   4. LAYOUT PRINCIPAL (Sidebar, Topbar, Content)
+   ============================================ */
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar (Barre latérale de navigation) */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--dark-color); /* Fond sombre, indépendant du thème principal */
+    color: white;
+    position: fixed; /* Fixée sur l'écran */
+    height: 100%;
+    left: 0;
+    top: 0;
+    transition: left 0.3s ease; /* Transition pour l'ouverture/fermeture */
+    z-index: 1000;
+    overflow-y: auto; /* Permet le défilement si le contenu est trop long */
+}
+
+.sidebar.collapsed {
+    left: calc(-1 * var(--sidebar-width)); /* Cache la sidebar en la décalant hors de l'écran */
+}
+
+.sidebar-header {
+    padding: 25px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Ligne de séparation */
+}
+
+.sidebar-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    display: flex; /* Permet d'aligner l'image et le texte */
+    align-items: center; /* Centre verticalement */
+}
+
+.sidebar-logo {
+    height: 30px; /* Taille du logo */
+    margin-right: 10px; /* Espacement entre le logo et le texte */
+}
+
+.sidebar-menu {
+    list-style: none; /* Supprime les puces de liste */
+    padding: 20px 0;
+}
+
+.sidebar-menu li {
+    margin: 5px 0;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s;
+    border-left: 3px solid transparent; /* Bordure animée pour l'état actif/survol */
+}
+
+.sidebar-menu a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-left-color: var(--primary-color);
+}
+
+.sidebar-menu a.active {
+    background: rgba(79, 70, 229, 0.2); /* Fond semi-transparent pour le lien actif */
+    color: white;
+    border-left-color: var(--primary-color);
+}
+
+.sidebar-menu a i {
+    width: 25px; /* Largeur fixe pour l'icône */
+    margin-right: 12px;
+    font-size: 1.1rem;
+}
+
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Main Content (Contenu principal de la page) */
+.main-content {
+    flex: 1; /* Prend l'espace restant */
+    margin-left: var(--sidebar-width); /* Décalé par la largeur de la sidebar */
+    transition: margin-left 0.3s ease;
+    min-height: 100vh;
+}
+
+.sidebar.collapsed ~ .main-content {
+    margin-left: 0; /* Prend toute la largeur quand la sidebar est repliée */
+}
+
+/* Topbar (Barre supérieure) */
+.topbar {
+    background: var(--bg-secondary);
+    height: var(--topbar-height);
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+    position: sticky; /* Reste en haut au défilement */
+    top: 0;
+    z-index: 100;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.theme-toggle {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.user-info i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+/* Content (Contenu de la page) */
+.content {
+    padding: 30px;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 30px;
+}
+
+/* ============================================
+   5. COMPOSANTS COMMUNS (Cartes, Tableaux, Boutons, Modals)
+   ============================================ */
+
+/* Cartes générales */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 30px;
+    background: var(--bg-secondary);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px); /* Effet de survol léger */
+    box-shadow: var(--shadow-md);
+}
+
+.card-body {
+    padding: 25px;
+}
+
+/* Tableaux */
+.table {
+    margin-bottom: 0;
+}
+
+.table thead {
+    background: var(--bg-tertiary);
+}
+
+.table thead th {
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    padding: 15px;
+}
+
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-primary);
+}
+
+.table tbody tr:hover {
+    background: var(--bg-tertiary);
+}
+
+/* Surcharge des styles de tableau pour le mode sombre */
+[data-theme="dark"] .table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text-primary);
+    --bs-table-border-color: var(--border-color);
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="dark"] .table thead th {
+    background-color: var(--bg-tertiary);
+}
+
+[data-theme="dark"] .table-hover > tbody > tr:hover > * {
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="dark"] .card {
+    background-color: var(--bg-secondary);
+}
+
+/* Boutons */
+.btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #4338ca;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+}
+
+.btn-danger {
+    background: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+    color: white;
+}
+
+/* Modales Bootstrap */
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: var(--shadow-lg);
+    background: var(--bg-secondary);
+}
+
+.modal-header, .modal-footer {
+    border-color: var(--border-color);
+    background: var(--bg-tertiary);
+}
+
+.modal-title {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.form-control,
+.form-select {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+    color: var(--text-primary);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* ============================================
+   6. STYLES DES PAGES SPÉCIFIQUES
+   ============================================ */
+
+/* KPI Cards (Indicateurs Clés de Performance) */
+.kpi-card {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px); /* Effet de survol */
+    box-shadow: var(--shadow-md);
+}
+
+.kpi-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    font-size: 1.6rem;
+    color: white;
+}
+
+.kpi-content h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.kpi-content p {
+    margin: 5px 0 0 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Chart Cards (Cartes des graphiques) */
+.chart-card {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: var(--shadow-sm);
+    height: 350px; /* Hauteur fixe pour les graphiques */
+}
+
+/* Images des produits dans les tableaux */
+.product-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover; /* Assure que l'image couvre la zone sans distorsion */
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+/* ============================================
+   7. RACCOURCIS ET RECHERCHE RAPIDE
+   ============================================ */
+
+/* Panneau d'aide des raccourcis */
+.shortcuts-help-panel {
+    position: fixed;
+    top: 50%;
+    right: -400px; /* Caché par défaut */
+    transform: translateY(-50%);
+    width: 380px;
+    background: var(--bg-secondary);
+    border-radius: 15px;
+    box-shadow: var(--shadow-lg);
+    z-index: 10000;
+    transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Animation de type "ressort" */
+    border: 1px solid var(--border-color);
+}
+
+.shortcuts-help-panel.show {
+    right: 20px; /* Affiche le panneau en le déplaçant */
+}
+
+.shortcuts-help-content {
+    padding: 25px;
+}
+
+.shortcuts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.shortcut-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.shortcut-item kbd {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 4px 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    box-shadow: 0 2px 0px var(--border-color); /* Effet 3D léger */
+}
+
+/* Modal de recherche rapide */
+.quick-search-modal .modal-content {
+    border-radius: 15px;
+}
+
+.quick-search-modal .input-group-text {
+    background: transparent;
+    border-right: none;
+}
+
+.quick-search-modal .form-control {
+    border-left: none;
+}
+
+#quickSearchResults .list-group-item {
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+#quickSearchResults .list-group-item:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateX(5px); /* Léger décalage au survol */
+}
+
+/* ============================================
+   8. STYLES UTILITAIRES ET ANIMATIONS
+   ============================================ */
+
+/* Responsive: Ajustements pour les petits écrans */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+/* Animations simples */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Appliquer l'animation aux éléments de base pour une entrée en douceur */
+.card, .kpi-card, .chart-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Classes utilitaires Bootstrap (overrides pour les couleurs du thème) */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.bg-success {
+    background-color: var(--success-color) !important;
+}
+
+.bg-warning {
+    background-color: var(--warning-color) !important;
+}
+
+.bg-danger {
+    background-color: var(--danger-color) !important;
+}
+
+.bg-info {
+    background-color: var(--info-color) !important;
+}
+
+/* ============================================
+   FOND ANIMÉ ET BOUTONS DE RÔLE (Page de connexion)
+   ============================================ */
+
+/* Fond animé avec des dégradés et des effets visuels */
+.animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* En arrière-plan */
+    overflow: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+    background-size: 400% 400%; /* Grand fond pour l'animation */
+    animation: gradientFlow 15s ease infinite; /* Anime le dégradé */
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Particules flottantes simulées avec un pseudo-élément */
+.animated-background::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 2px, transparent 2px);
+    background-size: 60px 60px; /* Taille des "particules" */
+    animation: particleMove 20s linear infinite;
+    opacity: 0.4;
+}
+
+@keyframes particleMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(60px, 60px); }
+}
+
+/* Formes géométriques animées (premier cercle) */
+.animated-background::after {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+    top: -250px;
+    left: -250px;
+    animation: circleFloat 20s ease-in-out infinite;
+}
+
+@keyframes circleFloat {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translate(100px, 100px) scale(1.2);
+        opacity: 0.5;
+    }
+}
+
+/* Formes supplémentaires pour la richesse visuelle */
+.login-page::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.2), transparent);
+    bottom: -150px;
+    right: -150px;
+    animation: circleFloat2 25s ease-in-out infinite;
+    z-index: 1; /* Légèrement au-dessus du fond, mais sous la carte */
+}
+
+@keyframes circleFloat2 {
+    0%, 100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    50% {
+        transform: translate(-100px, -100px) scale(1.3) rotate(180deg);
+    }
+}
+
+.login-page::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; /* Forme complexe */
+    background: linear-gradient(135deg, rgba(118, 75, 162, 0.2), rgba(240, 147, 251, 0.2));
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: blobAnimation 30s ease-in-out infinite; /* Animation de "blob" */
+    z-index: 1;
+}
+
+@keyframes blobAnimation {
+    0%, 100% {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    }
+    25% {
+        border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+        transform: translate(-50%, -50%) scale(1.1) rotate(90deg);
+    }
+    50% {
+        border-radius: 30% 70% 70% 30% / 70% 30% 30% 70%;
+        transform: translate(-50%, -50%) scale(0.9) rotate(180deg);
+    }
+    75% {
+        border-radius: 70% 30% 30% 70% / 30% 70% 70% 30%;
+        transform: translate(-50%, -50%) scale(1.05) rotate(270deg);
+    }
+}
+
+/* Style des boutons de rôle (Admin/User) */
+.role-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Deux colonnes pour les boutons */
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.role-btn {
+    background: rgba(15, 23, 42, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px 20px;
+    color: #f1f5f9;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    animation: roleButtonEntrance 0.6s ease-out backwards; /* Animation d'entrée individuelle */
+}
+
+/* Délais d'animation pour les boutons de rôle */
+.role-btn:nth-child(1) {
+    animation-delay: 0.3s;
+}
+
+.role-btn:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+/* Animation d'entrée des boutons de rôle */
+@keyframes roleButtonEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.role-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(79, 70, 229, 0.3); /* Effet d'onde au survol */
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.role-btn:hover::before {
+    width: 200px;
+    height: 200px;
+}
+
+.role-btn:hover {
+    border-color: var(--primary-color);
+    background: rgba(79, 70, 229, 0.2);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+}
+
+.role-btn i {
+    font-size: 24px;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.role-btn:hover i {
+    transform: scale(1.2) rotate(5deg);
+    color: var(--primary-color);
+}
+
+.role-btn span {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* État actif du bouton de rôle */
+.role-btn.active {
+    background: linear-gradient(135deg, var(--primary-color), #4338ca); /* Dégradé pour le bouton actif */
+    border-color: var(--primary-color);
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.5); /* Ombre plus prononcée */
+    transform: scale(1.05); /* Légèrement plus grand */
+}
+
+.role-btn.active::before {
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.role-btn.active i {
+    transform: scale(1.3);
+    color: #fff;
+    animation: iconPulse 1s ease-in-out infinite; /* Animation de pulsation de l'icône */
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        transform: scale(1.3);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+}
+
+.role-btn.active span {
+    color: #fff;
+    font-weight: 700;
+}
+
+/* Animation de transition entre les boutons */
+/* Cette animation peut être supprimée si elle est jugée superflue ou confuse */
+.role-btn {
+    animation: roleButtonEntrance 0.6s ease-out backwards;
+}
+
+/* Responsive pour les boutons de rôle */
+@media (max-width: 576px) {
+    .role-buttons {
+        grid-template-columns: 1fr; /* Une seule colonne sur les petits écrans */
+        gap: 10px;
+    }
+    
+    .role-btn {
+        padding: 12px 15px;
+    }
+    
+    .role-btn i {
+        font-size: 20px;
+    }
+    
+    .role-btn span {
+        font-size: 12px;
+    }
+}
