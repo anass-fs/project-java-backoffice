@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilisateurs - TECHSTORE Back-Office</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/jpeg" href="assets/images/logo.jpg">
+</head>
+<body>
+    <div class="wrapper">
+        
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3><a href="dashboard.html" class="text-decoration-none text-reset"><img src="assets/images/logo.jpg" alt="Logo" class="sidebar-logo">TECHSTORE</a></h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-chart-line"></i><span class="label"> Dashboard</span></a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i><span class="label"> Produits</span></a></li>
+                <li><a href="clients.html"><i class="fas fa-users"></i><span class="label"> Clients</span></a></li>
+                <li><a href="orders.html"><i class="fas fa-shopping-cart"></i><span class="label"> Commandes</span></a></li>
+                <li><a href="invoices.html"><i class="fas fa-file-invoice"></i><span class="label"> Factures</span></a></li>
+                <li><a href="categories.html"><i class="fas fa-tags"></i><span class="label"> Catégories</span></a></li>
+                <li><a href="users.html" class="active"><i class="fas fa-user-shield"></i><span class="label"> Utilisateurs</span></a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn btn-danger w-100">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+        </nav>
+        
+       
+        <div class="main-content">
+            <header class="topbar">
+                <button id="sidebarToggle" class="btn btn-link">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="d-flex align-items-center">
+                    <button id="themeToggle" class="theme-toggle" data-shortcut="Ctrl+D">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-link" onclick="Shortcuts.toggleShortcutsHelp()" data-shortcut="Ctrl+/" title="Aide des raccourcis">
+                        <i class="fas fa-keyboard"></i>
+                    </button>
+                    <div class="user-info">
+                        <span id="userName"></span>
+                        <i class="fas fa-user-circle ms-2"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="page-title">Gestion des Utilisateurs</h1>
+                    <div>
+                        <button id="addUserBtn" class="btn btn-primary me-2">
+                            <i class="fas fa-plus"></i> Ajouter un Utilisateur
+                        </button>
+                        <button id="exportCsvBtn" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-file-csv"></i> Export CSV
+                        </button>
+                        <select id="rowsPerPage" class="form-select d-inline-block" style="width: auto; vertical-align: middle;">
+                            <option value="10">10 lignes</option>
+                            <option value="25">25 lignes</option>
+                            <option value="50">50 lignes</option>
+                        </select>
+                    </div>
+                </div>
+
+                
+                <div class="row mb-3 g-2 align-items-center">
+                    <div class="col-md-4">
+                        <input id="userSearch" type="search" class="form-control" placeholder="Recherche instantanée (nom, email)...">
+                    </div>
+                    <div class="col-md-3">
+                        <select id="filterRole" class="form-select">
+                            <option value="">Tous les rôles</option>
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex">
+                        <input id="filterFrom" type="date" class="form-control me-2" title="Créés après">
+                        <input id="filterTo" type="date" class="form-control" title="Créés avant">
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <button id="clearFiltersBtn" class="btn btn-light">Effacer</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom</th>
+                                        <th>Email</th>
+                                        <th>Rôle</th>
+                                        <th>Créé par</th>
+                                        <th>Date de création</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                  
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="usersPaginationContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+  
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalTitle">Ajouter un Utilisateur</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="userForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="userId">
+                        <div class="mb-3">
+                            <label for="userFullName" class="form-label">Nom complet</label>
+                            <input type="text" class="form-control" id="userFullName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="userEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userRole" class="form-label">Rôle</label>
+                            <select class="form-select" id="userRole" required>
+                                <option value="Admin">Admin</option>
+                                <option value="User">User</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userCreatedBy" class="form-label">Créé par</label>
+                            <input type="text" id="userCreatedBy" class="form-control" disabled>
+                            <input type="hidden" id="userCreatedById">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/shortcuts.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/users.js"></script>
+   
+    <div class="modal fade" id="userDetailsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Détails de l'utilisateur</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="userDetailsBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

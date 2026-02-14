@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produits - TECHSTORE Back-Office</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/jpeg" href="assets/images/logo.jpg">
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3><a href="dashboard.html" class="text-decoration-none text-reset"><img src="assets/images/logo.jpg" alt="Logo" class="sidebar-logo">TECHSTORE</a></h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-chart-line"></i><span class="label"> Dashboard</span></a></li>
+                <li><a href="products.html" class="active"><i class="fas fa-box"></i><span class="label"> Produits</span></a></li>
+                <li><a href="clients.html"><i class="fas fa-users"></i><span class="label"> Clients</span></a></li>
+                <li><a href="orders.html"><i class="fas fa-shopping-cart"></i><span class="label"> Commandes</span></a></li>
+                <li><a href="invoices.html"><i class="fas fa-file-invoice"></i><span class="label"> Factures</span></a></li>
+                <li><a href="categories.html"><i class="fas fa-tags"></i><span class="label"> Catégories</span></a></li>
+                <li><a href="users.html"><i class="fas fa-user-shield"></i><span class="label"> Utilisateurs</span></a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn btn-danger w-100">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+        </nav>
+       
+        <div class="main-content">
+            <header class="topbar">
+                <button id="sidebarToggle" class="btn btn-link">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="d-flex align-items-center">
+                    <button id="themeToggle" class="theme-toggle" data-shortcut="Ctrl+D">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-link" onclick="Shortcuts.toggleShortcutsHelp()" data-shortcut="Ctrl+/" title="Aide des raccourcis">
+                        <i class="fas fa-keyboard"></i>
+                    </button>
+                    <div class="user-info">
+                        <span id="userName"></span>
+                        <i class="fas fa-user-circle ms-2"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="page-title">Gestion des Produits</h1>
+                    <button id="addProductBtn" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Ajouter un produit
+                    </button>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex gap-2">
+                        <input id="productSearch" type="search" class="form-control" placeholder="Recherche (nom, catégorie)..." style="min-width:260px;">
+                        <select id="productFilterCategory" class="form-select" style="width:200px;">
+                            <option value="">Toutes catégories</option>
+                        </select>
+                        <select id="productFilterUser" class="form-select" style="width:200px;">
+                            <option value="">Tous utilisateurs</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button id="exportProductsCsvBtn" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-file-csv"></i> Export CSV
+                        </button>
+                        <select id="productsRowsPerPage" class="form-select d-inline-block" style="width: auto; vertical-align: middle;">
+                            <option value="10">10 lignes</option>
+                            <option value="25">25 lignes</option>
+                            <option value="50">50 lignes</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Produit</th>
+                                        <th>Prix</th>
+                                        <th>Stock</th>
+                                        <th>Catégorie</th>
+                                        <th>Utilisateur</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="productsPagination"></div>
+                    </div>
+                </div>
+
+    
+    <div class="modal fade" id="productDetailsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Détails du produit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="productDetailsBody">
+                  
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Produit -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalTitle">Ajouter un produit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="productForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="productId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productName" class="form-label">Nom du produit</label>
+                                    <input type="text" class="form-control" id="productName" required>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="productUser" class="form-label">Utilisateur Assigné</label>
+                                            <input type="text" id="productUser" class="form-control" disabled>
+                                            <input type="hidden" id="productUserId">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="productPrice" class="form-label">Prix</label>
+                                    <input type="number" step="0.01" class="form-control" id="productPrice" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="productStock" class="form-label">Stock</label>
+                                    <input type="number" class="form-control" id="productStock" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="productCategory" class="form-label">Catégorie</label>
+                                    <select class="form-select" id="productCategory" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productImageFile" class="form-label">
+                                        <i class="fas fa-image me-2"></i>Image du produit
+                                    </label>
+                                    <input type="file" class="form-control" id="productImageFile" accept="image/*" onchange="handleImageUpload(event)">
+                                    <input type="hidden" id="productImage" value="">
+                                    <div id="imagePreview" class="mt-3" style="display: none;">
+                                        <img id="previewImg" src="" alt="Aperçu" class="img-thumbnail" style="max-width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px;">
+                                        <div class="text-center mt-2">
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="removeImage()">
+                                                <i class="fas fa-times"></i> Supprimer l'image
+                                            </button>
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/shortcuts.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/products.js"></script>
+</body>
+</html>
+
