@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commandes - TECHSTORE Back-Office</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/jpeg" href="assets/images/logo.jpg">
+</head>
+<body>
+    <div class="wrapper">
+        
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3><a href="dashboard.html" class="text-decoration-none text-reset"><img src="assets/images/logo.jpg" alt="Logo" class="sidebar-logo">TECHSTORE</a></h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="dashboard.html"><i class="fas fa-chart-line"></i><span class="label"> Dashboard</span></a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i><span class="label"> Produits</span></a></li>
+                <li><a href="clients.html"><i class="fas fa-users"></i><span class="label"> Clients</span></a></li>
+                <li><a href="orders.html" class="active"><i class="fas fa-shopping-cart"></i><span class="label"> Commandes</span></a></li>
+                <li><a href="invoices.html"><i class="fas fa-file-invoice"></i><span class="label"> Factures</span></a></li>
+                <li><a href="categories.html"><i class="fas fa-tags"></i><span class="label"> Catégories</span></a></li>
+                <li><a href="users.html"><i class="fas fa-user-shield"></i><span class="label"> Utilisateurs</span></a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn btn-danger w-100">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+        </nav>
+        
+        
+        <div class="main-content">
+            <header class="topbar">
+                <button id="sidebarToggle" class="btn btn-link">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="d-flex align-items-center">
+                    <button id="themeToggle" class="theme-toggle" data-shortcut="Ctrl+D">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-link" onclick="Shortcuts.toggleShortcutsHelp()" data-shortcut="Ctrl+/" title="Aide des raccourcis">
+                        <i class="fas fa-keyboard"></i>
+                    </button>
+                    <div class="user-info">
+                        <span id="userName"></span>
+                        <i class="fas fa-user-circle ms-2"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="page-title">Gestion des Commandes</h1>
+                    <button id="addOrderBtn" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Ajouter une commande
+                    </button>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex gap-2">
+                        <input id="orderSearch" type="search" class="form-control" placeholder="Recherche (client, id)..." style="min-width:260px;">
+                        <select id="orderFilterStatus" class="form-select" style="width:200px;">
+                            <option value="">Tous statuts</option>
+                        </select>
+                        <select id="orderFilterDate" class="form-select" style="width:200px;">
+                            <option value="">Toutes les dates</option>
+                            <option value="today">Aujourd'hui</option>
+                            <option value="this_week">Cette semaine</option>
+                            <option value="this_month">Ce mois</option>
+                            <option value="this_year">Cette année</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button id="exportOrdersCsvBtn" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-file-csv"></i> Export CSV
+                        </button>
+                        <select id="ordersRowsPerPage" class="form-select d-inline-block" style="width: auto; vertical-align: middle;">
+                            <option value="10">10 lignes</option>
+                            <option value="25">25 lignes</option>
+                            <option value="50">50 lignes</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Client</th>
+                                        <th>Utilisateur</th>
+                                        <th>Produits</th>
+                                        <th>Total</th>
+                                        <th>Statut</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="orderModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderModalTitle">Ajouter une commande</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="orderForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="orderId">
+                        <div class="mb-3">
+                            <label for="orderClient" class="form-label">Client</label>
+                            <select class="form-select" id="orderClient" required>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="orderUser" class="form-label">Utilisateur Assigné</label>
+                            <input type="text" id="orderUser" class="form-control" disabled>
+                            <input type="hidden" id="orderUserId">
+                        </div>
+                        <div class="mb-3">
+                            <label for="orderStatus" class="form-label">Statut</label>
+                            <select class="form-select" id="orderStatus" required>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="orderDate" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="orderDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="orderProduct" class="form-label">Produit</label>
+                            <select class="form-select" id="orderProduct" required>
+                                <option value="">-- Sélectionner un produit --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+   
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Détails de la commande</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="orderDetailsBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/shortcuts.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/orders.js"></script>
+</body>
+</html>
+
